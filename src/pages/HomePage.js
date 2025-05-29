@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import com from '../img/computer.jpg';
 import mypdf from '../img/mypdf.pdf';
@@ -137,6 +138,25 @@ useEffect(() => {
 }, []);
 
 const MotionLink = motion(Link);
+
+
+const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+const [status, setStatus] = useState('');
+
+const handleChange = (e) => {
+  setFormData({ ...formData, [e.target.name]: e.target.value });
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    await axios.post('http://localhost:5000/api/contact', formData);
+    setStatus('Message sent!');
+    setFormData({ name: '', email: '', message: '' });
+  } catch (error) {
+    setStatus('Failed to send message. Please try again later.');
+  }
+};
 
 
 return (
@@ -311,40 +331,65 @@ return (
       </section>
 
       {/* Contact Section */}
-      <section className="py-20 pb-16 bg-gray-100 dark:bg-gray-800">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="container mx-auto px-6 text-center"
-        >
-          <h3 className="text-3xl font-bold mb-8">Let's Work Together</h3>
-          <motion.form
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="max-w-2xl mx-auto space-y-6"
-          >
-            <input
-              type="email"
-              placeholder="Your email"
-              className="w-full p-4 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            <textarea
-              placeholder="Your message"
-              rows="4"
-              className="w-full p-4 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            ></textarea>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              className="bg-purple-600 px-8 py-3 rounded-full font-medium hover:bg-purple-700 text-white"
-            >
-              Send Message
-            </motion.button>
-          </motion.form>
-        </motion.div>
-      </section>
+<section
+  id="contact"
+  className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-800 py-20 px-4"
+>
+  <motion.form
+    onSubmit={handleSubmit}
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6 }}
+    viewport={{ once: true }}
+    className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-xl w-full max-w-lg"
+  >
+    <h2 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white">
+      Contact Me
+    </h2>
+
+    <input
+      type="text"
+      name="name"
+      placeholder="Your Name"
+      value={formData.name}
+      onChange={handleChange}
+      className="w-full mb-4 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+      required
+    />
+    <input
+      type="email"
+      name="email"
+      placeholder="Your Email"
+      value={formData.email}
+      onChange={handleChange}
+      className="w-full mb-4 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+      required
+    />
+    <textarea
+      name="message"
+      placeholder="Your Message"
+      rows="5"
+      value={formData.message}
+      onChange={handleChange}
+      className="w-full mb-4 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+      required
+    />
+
+    <button
+      type="submit"
+      className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition duration-300"
+    >
+      Send Message
+    </button>
+
+    {status && (
+      <p className="mt-4 text-center text-sm text-gray-700 dark:text-gray-300">
+        {status}
+      </p>
+    )}
+  </motion.form>
+</section>
+
     </div>
   );
 };
