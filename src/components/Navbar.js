@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from "react-router-dom";
 import {
   HiOutlineMenu,
   HiOutlineX,
@@ -95,6 +96,8 @@ const Navbar = ({ darkMode, setDarkMode }) => {
   }
 };
 
+const MotionLink = motion(Link);
+
 
   return (
     <>
@@ -138,20 +141,20 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             ))}
 
             {/* Get In Touch Button */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setFormOpen(true)}
-              title="Open Contact Form"
-              className="inline-flex items-center gap-2 px-6 py-2 rounded-full
-                bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800
-                text-white font-semibold uppercase tracking-wide
-                shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
-                transition-transform duration-300 ease-in-out animate-pulse"
-            >
-              <HiPaperAirplane className="text-xl rotate-45" />
-              Get In Touch
-            </motion.button>
+            <MotionLink
+  to="/contact" // <-- Set your route here
+  title="Open Contact Form"
+  whileHover={{ scale: 1.05 }}
+  whileTap={{ scale: 0.95 }}
+  className="inline-flex items-center gap-2 px-6 py-2 rounded-full
+    bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800
+    text-white font-semibold uppercase tracking-wide
+    shadow-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+    transition-transform duration-300 ease-in-out animate-pulse"
+>
+  <HiPaperAirplane className="text-xl rotate-45" />
+  Get In Touch
+</MotionLink>
 
             {/* Dark Mode Toggle */}
             <button
