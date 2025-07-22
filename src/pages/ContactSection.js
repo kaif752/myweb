@@ -37,13 +37,45 @@ const ContactPage = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  const validationErrors = validateForm();
+  
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    return;
+  }
+
+  setIsSubmitting(true);
+  
+  try {
+    const response = await fetch('https://backend-xcjm.vercel.app/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to send message');
     }
+
+    setSubmitSuccess(true);
+    setFormData({ name: "", email: "", subject: "", message: "" });
+  } catch (error) {
+    console.error('Error:', error);
+    setErrors({ submit: error.message });
+  } finally {
+    setIsSubmitting(false);
+    setTimeout(() => {
+      setSubmitSuccess(false);
+      setErrors({});
+    }, 3000);
+  }
+};
 
     setIsSubmitting(true);
     // Simulate API call
